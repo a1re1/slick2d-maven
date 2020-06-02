@@ -1,15 +1,10 @@
 package org.newdawn.slick.tests;
 	
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SavedState;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.TextField;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test of the the local storage utilities
@@ -40,8 +35,12 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	/**
 	 * @see org.newdawn.slick.Game#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		state = new SavedState("testdata");
+	public void init(GameContainer container) {
+		try {
+			state = new SavedState("testdata");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		nameValue = state.getString("name","DefaultName");
 		ageValue = (int) state.getNumber("age",64);
 		
@@ -71,7 +70,7 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
 	}
@@ -85,13 +84,9 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	 * @param argv The arguments passed in the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			container = new AppGameContainer(new SavedStateTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		container = new AppGameContainer(new SavedStateTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	/**

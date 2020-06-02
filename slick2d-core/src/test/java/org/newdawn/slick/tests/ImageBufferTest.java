@@ -1,13 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.ImageBuffer;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for image buffer maniupulation rendering
@@ -28,7 +22,7 @@ public class ImageBufferTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		ImageBuffer buffer = new ImageBuffer(320,200);
 		for (int x=0;x<320;x++) {
 			for (int y=0;y<200;y++) {
@@ -59,7 +53,7 @@ public class ImageBufferTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
 	}
@@ -70,12 +64,8 @@ public class ImageBufferTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new ImageBufferTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new ImageBufferTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

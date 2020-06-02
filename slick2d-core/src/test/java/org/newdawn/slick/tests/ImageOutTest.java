@@ -3,14 +3,9 @@ package org.newdawn.slick.tests;
 import java.io.File;
 import java.io.IOException;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.imageout.ImageOut;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 
@@ -41,16 +36,20 @@ public class ImageOutTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		this.container = container;
 		
 		try {
 			fire = ParticleIO.loadConfiguredSystem("testdata/system.xml");
 		} catch (IOException e) {
-			throw new SlickException("Failed to load particle systems", e);
+			throw new RuntimeException("Failed to load particle systems", e);
 		}
-		
-		copy = new Image(400,300);
+
+		try {
+			copy = new Image(400, 300);
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		String[] formats = ImageOut.getSupportedFormats();
 		message = "Formats supported: ";
 		for (int i=0;i<formats.length;i++) {
@@ -98,13 +97,13 @@ public class ImageOutTest extends BasicGame {
 	public void update(GameContainer container, int delta) throws SlickException {
 		fire.update(delta);
 		
-		if (container.getInput().isKeyPressed(Input.KEY_P)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_P)) {
 			writeTo(System.getProperty("java.io.tmpdir") + File.separator + "ImageOutTest.png");
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_J)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_J)) {
 			writeTo(System.getProperty("java.io.tmpdir") + File.separator + "ImageOutTest.jpg");
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_T)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_T)) {
 			writeTo(System.getProperty("java.io.tmpdir") + File.separator + "ImageOutTest.tga");
 		}
 	}
@@ -115,20 +114,16 @@ public class ImageOutTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new ImageOutTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new ImageOutTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	/**
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			container.exit();
 		}
 	}

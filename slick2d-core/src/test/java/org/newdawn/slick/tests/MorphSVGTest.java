@@ -1,10 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.InkscapeLoader;
 import org.newdawn.slick.svg.SVGMorph;
@@ -35,14 +31,16 @@ public class MorphSVGTest extends BasicGame {
 	/**
 	 * @see BasicGame#init(GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		base = InkscapeLoader.load("testdata/svg/walk1.svg");
-		morph = new SVGMorph(base);
-		morph.addStep(InkscapeLoader.load("testdata/svg/walk2.svg"));
-		morph.addStep(InkscapeLoader.load("testdata/svg/walk3.svg"));
-		morph.addStep(InkscapeLoader.load("testdata/svg/walk4.svg"));
-		
-		container.setVSync(true);
+	public void init(GameContainer container) {
+		try {
+			base = InkscapeLoader.load("testdata/svg/walk1.svg");
+			morph = new SVGMorph(base);
+			morph.addStep(InkscapeLoader.load("testdata/svg/walk2.svg"));
+			morph.addStep(InkscapeLoader.load("testdata/svg/walk3.svg"));
+			morph.addStep(InkscapeLoader.load("testdata/svg/walk4.svg"));
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -74,13 +72,9 @@ public class MorphSVGTest extends BasicGame {
 	 *            The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(
-					new MorphSVGTest());
-			container.setDisplayMode(800, 600, false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(
+				new MorphSVGTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800, 600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

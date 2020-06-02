@@ -3,16 +3,9 @@ package org.newdawn.slick.tests;
 
 import java.io.IOException;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.*;
 import org.newdawn.slick.font.effects.ColorEffect;
-import org.newdawn.slick.font.effects.ShadowEffect;
+import org.newdawn.slick.input.Input;
 
 /**
  * A simple test of the unicode font functionality provided
@@ -33,11 +26,15 @@ public class UnicodeFontTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		container.setShowFPS(false);
 
 		// unicodeFont = new UnicodeFont(Font.decode("Arial Unicode MS"), 25, false, false);
-		unicodeFont = new UnicodeFont("testdata/Lato-Thin.ttf", 48, false, false);
+		try {
+			unicodeFont = new UnicodeFont("testdata/Lato-Thin.ttf", 48, false, false);
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 //		unicodeFont.setPaddingBottom(10);
 //		unicodeFont.setPaddingRight(10);
 //		unicodeFont.setPaddingAdvanceX(-10);
@@ -91,8 +88,8 @@ public class UnicodeFontTest extends BasicGame {
 	 */
 	public static void main(String[] args) throws SlickException, IOException {
 		Input.disableControllers();
-		AppGameContainer container = new AppGameContainer(new UnicodeFontTest());
-		container.setDisplayMode(512, 600, false);
+		AppGameContainer container = new AppGameContainer(new UnicodeFontTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(512, 600, DisplayMode.Opt.WINDOWED);
 		container.setTargetFrameRate(20);
 		container.start();
 	}

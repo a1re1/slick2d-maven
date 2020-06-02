@@ -1,6 +1,7 @@
 package org.newdawn.slick.tests;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -9,6 +10,8 @@ import org.newdawn.slick.util.Log;
  * @author Onno Scheffers
  */
 public class SpriteSheetFontTest extends BasicGame {
+   private static final Log LOG = new Log(SpriteSheetFontTest.class);
+
    /**
     * The font we're going to use to render
     */
@@ -24,9 +27,13 @@ public class SpriteSheetFontTest extends BasicGame {
    /**
     * @see org.newdawn.slick.Game#init(org.newdawn.slick.GameContainer)
     */
-   public void init(GameContainer container) throws SlickException {
-      SpriteSheet sheet = new SpriteSheet("testdata/spriteSheetFont.png", 32, 32);
-      font = new SpriteSheetFont(sheet, ' ');
+   public void init(GameContainer container) {
+      try {
+         SpriteSheet sheet = new SpriteSheet("testdata/spriteSheetFont.png", 32, 32);
+         font = new SpriteSheetFont(sheet, ' ');
+      } catch (SlickException e) {
+         throw new RuntimeException(e);
+      }
    }
 
    /**
@@ -49,15 +56,11 @@ public class SpriteSheetFontTest extends BasicGame {
     * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
     */
    public void keyPressed(int key, char c) {
-      if (key == Input.KEY_ESCAPE) {
+      if (key == USKeyboard.KEY_ESCAPE) {
          System.exit(0);
       }
-      if (key == Input.KEY_SPACE) {
-         try {
-            container.setDisplayMode(640, 480, false);
-         } catch (SlickException e) {
-            Log.error(e);
-         }
+      if (key == USKeyboard.KEY_SPACE) {
+         container.setDisplayMode(640, 480, DisplayMode.Opt.WINDOWED);
       }
    }
 
@@ -72,12 +75,8 @@ public class SpriteSheetFontTest extends BasicGame {
     * @param argv The arguments passed in the test
     */
    public static void main(String[] argv) {
-      try {
-         container = new AppGameContainer(new SpriteSheetFontTest());
-         container.setDisplayMode(800, 600, false);
-         container.start();
-      } catch (SlickException e) {
-         e.printStackTrace();
-      }
+      container = new AppGameContainer(new SpriteSheetFontTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+      container.setDisplayMode(800, 600, DisplayMode.Opt.WINDOWED);
+      container.start();
    }
 }

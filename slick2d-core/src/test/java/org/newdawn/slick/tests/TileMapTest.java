@@ -1,11 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.tiled.TiledMap;
 
 /**
@@ -48,8 +44,12 @@ public class TileMapTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		map = new TiledMap("testdata/testmap.tmx","testdata");
+	public void init(GameContainer container) {
+		try {
+			map = new TiledMap("testdata/testmap.tmx", "testdata");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		// read some properties from map and layer
 		mapName = map.getMapProperty("name", "Unknown map name");
 		monsterDifficulty = map.getLayerProperty(0, "monsters", "easy peasy");
@@ -97,7 +97,7 @@ public class TileMapTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
 	}
@@ -108,12 +108,8 @@ public class TileMapTest extends BasicGame {
 	 * @param argv The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new TileMapTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new TileMapTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

@@ -1,11 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 /**
  * A test for basic image rendering
@@ -32,8 +27,12 @@ public class ImageCornerTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		image = new Image("testdata/logo.png");
+	public void init(GameContainer container) {
+		try {
+			image = new Image("testdata/logo.png");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		
 		width = image.getWidth() / 3;
 		height = image.getHeight() / 3;
@@ -82,14 +81,10 @@ public class ImageCornerTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		boolean sharedContextTest = false;
-		
-		try {
-			AppGameContainer container = new AppGameContainer(new ImageCornerTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+
+		AppGameContainer container = new AppGameContainer(new ImageCornerTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	public void update(GameContainer container, int delta) throws SlickException {

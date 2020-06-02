@@ -1,11 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Polygon;
 
 /**
@@ -31,7 +26,7 @@ public class PolygonTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		poly = new Polygon();
 		poly.addPoint(300, 100);
 		poly.addPoint(320, 200);
@@ -72,7 +67,7 @@ public class PolygonTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		try {
-			AppGameContainer container = new AppGameContainer(new PolygonTest(), 640, 480, false);
+			AppGameContainer container = new AppGameContainer(new PolygonTest(), 640, 480, DisplayMode.Opt.WINDOWED);
 			container.start();
 		} catch (Exception e) {
 			e.printStackTrace();

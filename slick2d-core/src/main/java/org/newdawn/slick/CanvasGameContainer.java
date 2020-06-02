@@ -4,16 +4,18 @@ import java.awt.Canvas;
 
 import javax.swing.SwingUtilities;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
+import org.newdawn.slick.input.Input;
 import org.newdawn.slick.util.Log;
 
 /**
  * A game container that displays the game on an AWT Canvas.
  * 
  * @author kevin
+ * @tyler
  */
 public class CanvasGameContainer extends Canvas {
+	private static final Log LOG = new Log(CanvasGameContainer.class);
+
 	/** The actual container implementation */
 	protected Container container;
 	/** The game being held in this container */
@@ -54,25 +56,11 @@ public class CanvasGameContainer extends Canvas {
 	 * 
 	 * @throws SlickException Indicates a failure during game execution
 	 */
-	public void start() throws SlickException {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Input.disableControllers();
-					
-					try {
-						Display.setParent(CanvasGameContainer.this);
-					} catch (LWJGLException e) {
-						throw new SlickException("Failed to setParent of canvas", e);
-					}
-					
-					container.setup();
-					scheduleUpdate();
-				} catch (SlickException e) {
-					e.printStackTrace();
-					System.exit(0);
-				}
-			}
+	public void start() {
+		SwingUtilities.invokeLater(() -> {
+			Input.disableControllers();
+			container.setup();
+			scheduleUpdate();
 		});
 	}
 	
@@ -84,16 +72,10 @@ public class CanvasGameContainer extends Canvas {
 			return;
 		}
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					container.gameLoop();
-				} catch (SlickException e) {
-					e.printStackTrace();
-				}
-				container.checkDimensions();
-				scheduleUpdate();
-			}
+		SwingUtilities.invokeLater(() -> {
+			container.gameLoop();
+			container.checkDimensions();
+			scheduleUpdate();
 		});
 	}
 	/**
@@ -127,7 +109,7 @@ public class CanvasGameContainer extends Canvas {
 		 * @throws SlickException Indicates a failure to initialise
 		 */
 		public Container(Game game, boolean shared) throws SlickException {
-			super(game, CanvasGameContainer.this.getWidth(), CanvasGameContainer.this.getHeight(), false);
+			super(game, CanvasGameContainer.this.getWidth(), CanvasGameContainer.this.getHeight(), DisplayMode.Opt.WINDOWED);
 
 			width = CanvasGameContainer.this.getWidth();
 			height = CanvasGameContainer.this.getHeight();
@@ -170,14 +152,10 @@ public class CanvasGameContainer extends Canvas {
 		 */
 		public void checkDimensions() {
 			if ((width != CanvasGameContainer.this.getWidth()) ||
-			    (height != CanvasGameContainer.this.getHeight())) {
+					(height != CanvasGameContainer.this.getHeight())) {
 				
-				try {
-					setDisplayMode(CanvasGameContainer.this.getWidth(), 
-								   CanvasGameContainer.this.getHeight(), false);
-				} catch (SlickException e) {
-					Log.error(e);
-				}
+				setDisplayMode(CanvasGameContainer.this.getWidth(),
+						CanvasGameContainer.this.getHeight(), DisplayMode.Opt.WINDOWED);
 			}
 		}
 	}

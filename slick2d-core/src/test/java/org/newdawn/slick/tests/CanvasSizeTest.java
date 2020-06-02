@@ -18,7 +18,8 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class CanvasSizeTest extends BasicGame {
-	
+	private static final Log LOG = new Log(CanvasSizeTest.class);
+
 	/**
 	 * Create test
 	 */
@@ -29,7 +30,7 @@ public class CanvasSizeTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		System.out.println(container.getWidth() + ", " + container.getHeight());
 	}
 
@@ -70,7 +71,7 @@ public class CanvasSizeTest extends BasicGame {
 	
 			container.start();
 		} catch (Exception e) {
-			Log.error(e);
+			LOG.error(e);
 		}
 	}
 }

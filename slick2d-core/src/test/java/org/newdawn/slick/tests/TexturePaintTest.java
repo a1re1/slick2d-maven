@@ -1,12 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.ShapeRenderer;
@@ -39,13 +33,17 @@ public class TexturePaintTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		poly.addPoint(120, 120);
 		poly.addPoint(420, 100);
 		poly.addPoint(620, 420);
 		poly.addPoint(300, 320);
-	
-		image = new Image("testdata/rocks.png");
+
+		try {
+			image = new Image("testdata/rocks.png");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		
 		texPaint = new TexCoordGenerator() {
 			public Vector2f getCoordFor(float x, float y) {
@@ -79,12 +77,8 @@ public class TexturePaintTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new TexturePaintTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new TexturePaintTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

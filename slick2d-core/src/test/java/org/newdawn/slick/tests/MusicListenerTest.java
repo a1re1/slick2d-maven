@@ -1,13 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.MusicListener;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for music listeners which notify you when the music has eneded
@@ -34,9 +28,13 @@ public class MusicListenerTest extends BasicGame implements MusicListener {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
+		try {
 		music = new Music("testdata/restart.ogg", false);
 		stream = new Music("testdata/restart.ogg", false);
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		
 		music.addListener(this);
 		stream.addListener(this);
@@ -80,12 +78,12 @@ public class MusicListenerTest extends BasicGame implements MusicListener {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_M) {
+		if (key == USKeyboard.KEY_M) {
 			musicEnded = false;
 			musicSwapped = false;
 			music.play();
 		}
-		if (key == Input.KEY_S) {
+		if (key == USKeyboard.KEY_S) {
 			musicEnded = false;
 			musicSwapped = false;
 			stream.play();
@@ -98,12 +96,8 @@ public class MusicListenerTest extends BasicGame implements MusicListener {
 	 * @param argv The arguments provided to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new MusicListenerTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new MusicListenerTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

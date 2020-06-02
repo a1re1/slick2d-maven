@@ -1,13 +1,7 @@
 package org.newdawn.slick.tests;
 
-import java.io.IOException;
-
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
@@ -38,7 +32,7 @@ public class DuplicateEmitterTest extends BasicGame {
 	 * and place them nicely on the screen
 	 * @param container The surrounding game container
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		this.container = container;
 		
 		try {
@@ -62,8 +56,8 @@ public class DuplicateEmitterTest extends BasicGame {
 				// and add it to the original particle system to get the new emitter updated and rendered
 				explosionSystem.addEmitter(newOne);
 			}
-		} catch (IOException e) {
-			throw new SlickException("Failed to load particle systems", e);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -85,10 +79,10 @@ public class DuplicateEmitterTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			container.exit();
 		}
-		if (key == Input.KEY_K) {
+		if (key == USKeyboard.KEY_K) {
 			explosionEmitter.wrapUp();
 		}
 	}
@@ -99,13 +93,9 @@ public class DuplicateEmitterTest extends BasicGame {
 	 * @param argv The arguments to pass into the test, not used here
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new DuplicateEmitterTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new DuplicateEmitterTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 }

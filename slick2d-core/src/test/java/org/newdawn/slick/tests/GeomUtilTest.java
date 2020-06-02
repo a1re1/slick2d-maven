@@ -2,13 +2,7 @@ package org.newdawn.slick.tests;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.GeomUtil;
 import org.newdawn.slick.geom.GeomUtilListener;
@@ -17,6 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test to try shape cutting
@@ -98,10 +93,9 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	/**
 	 * @see BasicGame#init(GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		util.setListener(this);
 		init();
-		container.setVSync(true);
 	}
 
 	/**
@@ -109,26 +103,26 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	 */
 	public void update(GameContainer container, int delta)
 			throws SlickException {
-		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_SPACE)) {
 			dynamic = !dynamic;
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_ENTER)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_ENTER)) {
 			union = !union;
 			makeBoolean();
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_1)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_1)) {
 			cut = circle;
 			circle.setCenterX(xp);
 			circle.setCenterY(yp);
 			makeBoolean();
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_2)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_2)) {
 			cut = rect;
 			rect.setCenterX(xp);
 			rect.setCenterY(yp);
 			makeBoolean();
 		}
-		if (container.getInput().isKeyPressed(Input.KEY_3)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_3)) {
 			cut = star;
 			star.setCenterX(xp);
 			star.setCenterY(yp);
@@ -210,13 +204,9 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	 * @param argv The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new GeomUtilTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new GeomUtilTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	public void pointExcluded(float x, float y) {

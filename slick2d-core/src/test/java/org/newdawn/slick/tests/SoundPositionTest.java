@@ -1,13 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.openal.SoundStore;
 
 /**
@@ -34,12 +28,16 @@ public class SoundPositionTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		SoundStore.get().setMaxSources(32);
 		
 		myContainer = container;
-		music = new Music("testdata/kirby.ogg", true);
-		music.play();
+		try {
+			music = new Music("testdata/kirby.ogg", true);
+			music.play();
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -62,14 +60,14 @@ public class SoundPositionTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_SPACE) {
+		if (key == USKeyboard.KEY_SPACE) {
 			if (music.playing()) {
 				music.pause();
 			} else {
 				music.resume();
 			}
 		}
-		if (key == Input.KEY_RIGHT) {
+		if (key == USKeyboard.KEY_RIGHT) {
 			music.setPosition(music.getPosition()+5);
 		}
 	}
@@ -80,12 +78,8 @@ public class SoundPositionTest extends BasicGame {
 	 * @param argv The arguments provided to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new SoundPositionTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new SoundPositionTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

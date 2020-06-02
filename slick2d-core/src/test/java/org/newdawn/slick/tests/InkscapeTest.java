@@ -1,12 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.svg.InkscapeLoader;
 import org.newdawn.slick.svg.SimpleDiagramRenderer;
@@ -36,17 +31,21 @@ public class InkscapeTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		container.getGraphics().setBackground(Color.white);
 		
 		InkscapeLoader.RADIAL_TRIANGULATION_LEVEL = 2;
-		
+
+		try {
 //		renderer[0] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/orc.svg"));
 //		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
 //		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
-		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/clonetest.svg"));
+			renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/clonetest.svg"));
 //		renderer[4] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/cow.svg"));
-		
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
+
 		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
 	}
 
@@ -54,28 +53,28 @@ public class InkscapeTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) throws SlickException {
-		if (container.getInput().isKeyDown(Input.KEY_Q)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_Q)) {
 			zoom += (delta * 0.01f);
 			if (zoom > 10) {
 				zoom = 10;
 			}
 		}
-		if (container.getInput().isKeyDown(Input.KEY_A)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_A)) {
 			zoom -= (delta * 0.01f);
 			if (zoom < 0.1f) {
 				zoom = 0.1f;
 			}
 		}
-		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_RIGHT)) {
 			x += (delta * 0.1f);
 		}
-		if (container.getInput().isKeyDown(Input.KEY_LEFT)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_LEFT)) {
 			x -= (delta * 0.1f);
 		}
-		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_DOWN)) {
 			y += (delta * 0.1f);
 		}
-		if (container.getInput().isKeyDown(Input.KEY_UP)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_UP)) {
 			y -= (delta * 0.1f);
 		}
 	}
@@ -114,15 +113,11 @@ public class InkscapeTest extends BasicGame {
 	 * @param argv The arguments passed in
 	 */
 	public static void main(String argv[]) {
-		try {
-			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
-			Renderer.setLineStripRenderer(Renderer.QUAD_BASED_LINE_STRIP_RENDERER);
-			
-			AppGameContainer container = new AppGameContainer(new InkscapeTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
+		Renderer.setLineStripRenderer(Renderer.QUAD_BASED_LINE_STRIP_RENDERER);
+
+		AppGameContainer container = new AppGameContainer(new InkscapeTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

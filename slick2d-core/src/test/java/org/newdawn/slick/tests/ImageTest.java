@@ -1,12 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for basic image rendering
@@ -43,16 +38,20 @@ public class ImageTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		image = tga = new Image("testdata/logo.png");
-        rotImage = new Image("testdata/logo.png");
-        rotImage = rotImage.getScaledCopy(rotImage.getWidth() / 2, rotImage.getHeight() / 2);
-        //rotImage.setCenterOfRotation(0,0);
-        
-		scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
-		gif = new Image("testdata/logo.gif");
-		gif.destroy();
-		gif = new Image("testdata/logo.gif");
+	public void init(GameContainer container) {
+		try {
+			image = tga = new Image("testdata/logo.png");
+			rotImage = new Image("testdata/logo.png");
+			rotImage = rotImage.getScaledCopy(rotImage.getWidth() / 2, rotImage.getHeight() / 2);
+			//rotImage.setCenterOfRotation(0,0);
+
+			scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
+			gif = new Image("testdata/logo.gif");
+			gif.destroy();
+			gif = new Image("testdata/logo.gif");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		scaled = gif.getScaledCopy(120, 120);
 		subImage = image.getSubImage(200,0,70,260);
 		rot = 0;
@@ -120,16 +119,16 @@ public class ImageTest extends BasicGame {
 				exitMe = true;
 			}
 			
-			AppGameContainer container = new AppGameContainer(new ImageTest());
+			AppGameContainer container = new AppGameContainer(new ImageTest(), 800, 600, DisplayMode.Opt.WINDOWED);
 			container.setForceExit(!sharedContextTest);
-			container.setDisplayMode(800,600,false);
+			container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
 			container.start();
 			
 			if (sharedContextTest) {
 				System.out.println("Exit first instance");
 				exitMe = false;
-				container = new AppGameContainer(new ImageTest());
-				container.setDisplayMode(800,600,false);
+				container = new AppGameContainer(new ImageTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+				container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
 				container.start();
 			}
 		} catch (SlickException e) {
@@ -142,7 +141,7 @@ public class ImageTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_SPACE) {
+		if (key == USKeyboard.KEY_SPACE) {
 			if (image == gif) {
 				image = tga;
 			} else {

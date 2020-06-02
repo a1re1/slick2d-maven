@@ -1,12 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for transforming the graphics context
@@ -41,11 +36,11 @@ public class TransformTest2 extends BasicGame {
    public TransformTest2() {
       super("Transform Test");
    }
-   
+
    /**
     * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
     */
-   public void init(GameContainer container) throws SlickException {
+   public void init(GameContainer container) {
       container.setTargetFrameRate(100);
    }
 
@@ -104,26 +99,26 @@ public class TransformTest2 extends BasicGame {
     * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
     */
    public void keyPressed(int key, char c) {
-      if (key == Input.KEY_ESCAPE) {
+      if (key == USKeyboard.KEY_ESCAPE) {
          System.exit(0);
       }
-      if (key == Input.KEY_Q) {
+      if (key == USKeyboard.KEY_Q) {
          scaleUp = true;
       }
-      if (key == Input.KEY_A) {
+      if (key == USKeyboard.KEY_A) {
          scaleDown = true;
       }
 
-      if( key == Input.KEY_LEFT) {
+      if( key == USKeyboard.KEY_LEFT) {
          moveLeft = true;
       }
-      if( key == Input.KEY_UP ) {
+      if( key == USKeyboard.KEY_UP ) {
          moveUp = true;
       }
-      if( key == Input.KEY_RIGHT ) {
+      if( key == USKeyboard.KEY_RIGHT ) {
          moveRight = true;
       }
-      if( key == Input.KEY_DOWN ) {
+      if( key == USKeyboard.KEY_DOWN ) {
          moveDown = true;
       }
    }
@@ -132,23 +127,23 @@ public class TransformTest2 extends BasicGame {
     * @see org.newdawn.slick.BasicGame#keyReleased(int, char)
     */
    public void keyReleased(int key, char c) {
-      if (key == Input.KEY_Q) {
+      if (key == USKeyboard.KEY_Q) {
          scaleUp = false;
       }
-      if (key == Input.KEY_A) {
+      if (key == USKeyboard.KEY_A) {
          scaleDown = false;
       }
       
-      if( key == Input.KEY_LEFT) {
+      if( key == USKeyboard.KEY_LEFT) {
          moveLeft = false;
       }
-      if( key == Input.KEY_UP ) {
+      if( key == USKeyboard.KEY_UP ) {
          moveUp = false;
       }
-      if( key == Input.KEY_RIGHT ) {
+      if( key == USKeyboard.KEY_RIGHT ) {
          moveRight = false;
       }
-      if( key == Input.KEY_DOWN ) {
+      if( key == USKeyboard.KEY_DOWN ) {
          moveDown = false;
       }
    }
@@ -159,12 +154,8 @@ public class TransformTest2 extends BasicGame {
     * @param argv The arguments passed to the test
     */
    public static void main(String[] argv) {
-      try {
-         AppGameContainer container = new AppGameContainer(new TransformTest2());
-         container.setDisplayMode(640,480,false);
-         container.start();
-      } catch (SlickException e) {
-         e.printStackTrace();
-      }
+      AppGameContainer container = new AppGameContainer(new TransformTest2(), 800, 600, DisplayMode.Opt.WINDOWED);
+      container.setDisplayMode(640,480, DisplayMode.Opt.WINDOWED);
+      container.start();
    }
 } 

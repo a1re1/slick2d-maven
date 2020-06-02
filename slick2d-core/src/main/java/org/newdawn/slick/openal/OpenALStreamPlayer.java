@@ -8,7 +8,6 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.openal.OpenALException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -18,24 +17,27 @@ import org.newdawn.slick.util.ResourceLoader;
  * 
  * @author Kevin Glass
  * @author Nathan Sweet <misc@n4te.com>
- * @author Rockstar play and setPosition cleanup 
+ * @author Rockstar play and setPosition cleanup
+ * @author tyler
  */
 public class OpenALStreamPlayer {
+	private static final Log LOG = new Log(OpenALStreamPlayer.class);
+
 	/** The number of buffers to maintain */
 	public static final int BUFFER_COUNT = 3;
 	/** The size of the sections to stream from the stream */
 	private static final int sectionSize = 4096 * 20;
 	
 	/** The buffer read from the data stream */
-	private byte[] buffer = new byte[sectionSize];
+	private final byte[] buffer = new byte[sectionSize];
 	/** Holds the OpenAL buffer names */
-	private IntBuffer bufferNames;
+	private final IntBuffer bufferNames;
 	/** The byte buffer passed to OpenAL containing the section */
-	private ByteBuffer bufferData = BufferUtils.createByteBuffer(sectionSize);
+	private final ByteBuffer bufferData = BufferUtils.createByteBuffer(sectionSize);
 	/** The buffer holding the names of the OpenAL buffer thats been fully played back */
-	private IntBuffer unqueued = BufferUtils.createIntBuffer(1);
+	private final IntBuffer unqueued = BufferUtils.createIntBuffer(1);
 	/** The source we're playing back on */
-    private int source;
+    private final int source;
 	/** The number of buffers remaining */
     private int remainingBufferCount;
 	/** True if we should loop the track */
@@ -226,12 +228,7 @@ public class OpenALStreamPlayer {
 				bufferData.flip();
 
 				int format = audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
-				try {
-					AL10.alBufferData(bufferId, format, bufferData, audio.getRate());
-				} catch (OpenALException e) {
-					Log.error("Failed to loop buffer: "+bufferId+" "+format+" "+count+" "+audio.getRate(), e);
-					return false;
-				}
+				AL10.alBufferData(bufferId, format, bufferData, audio.getRate());
 			} else {
 				if (loop) {
 					initStreams();
@@ -244,7 +241,7 @@ public class OpenALStreamPlayer {
 			
 			return true;
 		} catch (IOException e) {
-			Log.error(e);
+			LOG.error(e);
 			return false;
 		}
 	}
@@ -288,7 +285,7 @@ public class OpenALStreamPlayer {
 
 			return true;
 		} catch (IOException e) {
-			Log.error(e);
+			LOG.error(e);
 			return false;
 		}
 	}

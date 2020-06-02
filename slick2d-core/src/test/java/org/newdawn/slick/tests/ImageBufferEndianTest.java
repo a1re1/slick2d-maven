@@ -1,14 +1,7 @@
 package org.newdawn.slick.tests;
 import java.nio.ByteOrder;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.ImageBuffer;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 /**
  * Quick test for endianess in image buffers 
@@ -40,13 +33,9 @@ public class ImageBufferEndianTest extends BasicGame {
     * @param args The arguments passed into the test
     */
    public static void main(String[] args) {
-      try {
-         AppGameContainer container = new AppGameContainer(new ImageBufferEndianTest());
-         container.setDisplayMode(800,600,false);
-         container.start();
-      } catch (SlickException e) {
-         e.printStackTrace();
-      }
+      AppGameContainer container = new AppGameContainer(new ImageBufferEndianTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+      container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+      container.start();
    }
 
    /*
@@ -67,7 +56,7 @@ public class ImageBufferEndianTest extends BasicGame {
     * (non-Javadoc)
     * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
     */
-   public void init(GameContainer container) throws SlickException {
+   public void init(GameContainer container) {
       // detect what endian we have
       if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN) {
              endian = "Big endian";

@@ -2,13 +2,9 @@ package org.newdawn.slick.tests;
 	
 import java.util.ArrayList;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.Input;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -17,6 +13,8 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class InputTest extends BasicGame {
+	private static final Log LOG = new Log(InputTest.class);
+
 	/** The message to be displayed */
 	private String message = "Press any key, mouse button, or drag the mouse";
 	/** The lines to be drawn on the screen */
@@ -55,7 +53,7 @@ public class InputTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		if (container instanceof AppGameContainer) {
 			app = (AppGameContainer) container;
 		}
@@ -93,9 +91,9 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) {
-        lshift = container.getInput().isKeyDown(Input.KEY_LSHIFT);
-        rshift = container.getInput().isKeyDown(Input.KEY_RSHIFT);
-        space = container.getInput().isKeyDown(Input.KEY_SPACE); 
+        lshift = container.getInput().isKeyDown(USKeyboard.KEY_LSHIFT);
+        rshift = container.getInput().isKeyDown(USKeyboard.KEY_RSHIFT);
+        space = container.getInput().isKeyDown(USKeyboard.KEY_SPACE);
         
 		if (controllerLeft[0]) {
 			x -= delta * 0.1f;
@@ -115,15 +113,15 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
-		if (key == Input.KEY_F1) {
+		if (key == USKeyboard.KEY_F1) {
 			if (app != null) {
 				try {
-					app.setDisplayMode(600, 600, false);
-					app.reinit();
-				} catch (Exception e) { Log.error(e); }
+					app.setDisplayMode(600, 600, DisplayMode.Opt.WINDOWED);
+					app.reInit();
+				} catch (Exception e) { LOG.error(e); }
 			}
 		}
 	}
@@ -243,12 +241,8 @@ public class InputTest extends BasicGame {
 	 * @param argv The arguments passed into our test
  	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new InputTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new InputTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

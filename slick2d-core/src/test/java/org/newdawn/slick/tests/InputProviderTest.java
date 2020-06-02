@@ -1,11 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.command.BasicCommand;
 import org.newdawn.slick.command.Command;
 import org.newdawn.slick.command.ControllerButtonControl;
@@ -14,6 +9,7 @@ import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.command.InputProviderListener;
 import org.newdawn.slick.command.KeyControl;
 import org.newdawn.slick.command.MouseButtonControl;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for abstract input via InputProvider
@@ -42,17 +38,17 @@ public class InputProviderTest extends BasicGame implements InputProviderListene
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		provider = new InputProvider(container.getInput());
 		provider.addListener(this);
 		
-		provider.bindCommand(new KeyControl(Input.KEY_LEFT), run);
-		provider.bindCommand(new KeyControl(Input.KEY_A), run);
+		provider.bindCommand(new KeyControl(USKeyboard.KEY_LEFT), run);
+		provider.bindCommand(new KeyControl(USKeyboard.KEY_A), run);
 		provider.bindCommand(new ControllerDirectionControl(0, ControllerDirectionControl.LEFT), run);
-		provider.bindCommand(new KeyControl(Input.KEY_UP), jump);
-		provider.bindCommand(new KeyControl(Input.KEY_W), jump);
+		provider.bindCommand(new KeyControl(USKeyboard.KEY_UP), jump);
+		provider.bindCommand(new KeyControl(USKeyboard.KEY_W), jump);
 		provider.bindCommand(new ControllerDirectionControl(0, ControllerDirectionControl.UP), jump);
-		provider.bindCommand(new KeyControl(Input.KEY_SPACE), attack);
+		provider.bindCommand(new KeyControl(USKeyboard.KEY_SPACE), attack);
 		provider.bindCommand(new MouseButtonControl(0), attack);
 		provider.bindCommand(new ControllerButtonControl(0, 1), attack);
 	}
@@ -91,12 +87,8 @@ public class InputProviderTest extends BasicGame implements InputProviderListene
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new InputProviderTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new InputProviderTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

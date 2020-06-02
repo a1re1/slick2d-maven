@@ -75,7 +75,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.input.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.GlyphPage;
@@ -209,7 +209,7 @@ public class Hiero extends JFrame {
 		game = new BasicGame("Hiero") {
 			String sampleText;
 
-			public void init (final GameContainer container) throws SlickException {
+			public void init (final GameContainer container) {
 				container.setShowFPS(false);
 				container.setVerbose(false);
 				container.setTargetFrameRate(60);
@@ -1184,6 +1184,12 @@ public class Hiero extends JFrame {
 	}
 
 	public static void main(String[] args) throws Exception {
+		File JGLLib = new File("./natives");
+		System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
+		System.setProperty(
+				"net.java.games.input.librarypath",
+				JGLLib.getAbsolutePath()
+		);
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

@@ -45,16 +45,20 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
 import org.lwjgl.openal.AL10;
+import org.newdawn.slick.util.Log;
 
 /**
  *
  * Utitlity class for loading wavefiles.
  *
  * @author Brian Matzon <brian@matzon.dk>
+ * @author tyler
  * @version $Revision: 2286 $
  * $Id: WaveData.java 2286 2006-03-23 19:32:21Z matzon $
  */
 public class WaveData {
+	private static final Log LOG = new Log(WaveData.class);
+
 	/** actual wave data */
 	public final ByteBuffer data;
 
@@ -96,7 +100,7 @@ public class WaveData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(path.openStream())));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from: " + path);
+			LOG.error("Unable to create from: " + path);
 			e.printStackTrace();
 			return null;
 		}		
@@ -123,7 +127,7 @@ public class WaveData {
 			return create(
 				AudioSystem.getAudioInputStream(is));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from inputstream");
+			LOG.error("Unable to create from inputstream");
 			e.printStackTrace();
 			return null;
 		}		

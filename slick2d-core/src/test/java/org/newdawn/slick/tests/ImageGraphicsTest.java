@@ -1,20 +1,13 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 
 /**
  * A test for rendering to an image
  *
  * @author kevin
+ * @author tyler
  */
 public class ImageGraphicsTest extends BasicGame {
 	/** The image loaded and then rendered to */
@@ -46,14 +39,18 @@ public class ImageGraphicsTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		testImage = new Image("testdata/logo.png");
-		preloaded = new Image("testdata/logo.png");
-		testFont = new AngelCodeFont("testdata/hiero.fnt","testdata/hiero.png");
-		target = new Image(400,300);
-		cut = new Image(100,100);
-		gTarget = target.getGraphics();
-		offscreenPreload = preloaded.getGraphics();
+	public void init(GameContainer container) {
+		try {
+			testImage = new Image("testdata/logo.png");
+			preloaded = new Image("testdata/logo.png");
+			testFont = new AngelCodeFont("testdata/hiero.fnt", "testdata/hiero.png");
+			target = new Image(400, 300);
+			cut = new Image(100, 100);
+			gTarget = target.getGraphics();
+			offscreenPreload = preloaded.getGraphics();
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		
 		offscreenPreload.drawString("Drawing over a loaded image", 5, 15);
 		offscreenPreload.setLineWidth(5);
@@ -66,8 +63,6 @@ public class ImageGraphicsTest extends BasicGame {
 		
 		if (GraphicsFactory.usingFBO()) {
 			using = "FBO (Frame Buffer Objects)";
-		} else if (GraphicsFactory.usingPBuffer()) {
-			using = "Pbuffer (Pixel Buffers)";
 		}
 		
 		System.out.println(preloaded.getColor(50,50));
@@ -154,14 +149,10 @@ public class ImageGraphicsTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			GraphicsFactory.setUseFBO(false);
-			
-			AppGameContainer container = new AppGameContainer(new ImageGraphicsTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		GraphicsFactory.setUseFBO(false);
+
+		AppGameContainer container = new AppGameContainer(new ImageGraphicsTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

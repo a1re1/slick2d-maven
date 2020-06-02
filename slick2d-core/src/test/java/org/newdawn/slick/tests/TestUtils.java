@@ -1,14 +1,8 @@
 package org.newdawn.slick.tests;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
@@ -20,6 +14,9 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
+
 /**
  * A simple utility test to use the internal slick API without 
  * the slick framework.
@@ -27,6 +24,8 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class TestUtils {
+	private static final Log LOG = new Log(TestUtils.class);
+
 	/** The texture that's been loaded */
 	private Texture texture;
 	/** The ogg sound effect */
@@ -41,7 +40,9 @@ public class TestUtils {
 	private Audio modStream;
 	/** The font to draw to the screen */
 	private Font font;
-	
+
+	private long window;
+
 	/**
 	 * Start the test 
 	 */
@@ -53,13 +54,15 @@ public class TestUtils {
 			update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			render();
-			
-			Display.update();
-			Display.sync(100);
 
-			if (Display.isCloseRequested()) {
-				System.exit(0);
-			}
+			glfwPollEvents();
+			GLFW.glfwSwapBuffers(window);
+
+//			Display.sync(100);
+//
+//			if (Display.isCloseRequested()) {
+//				System.exit(0);
+//			}
 		}
 	}
 	
@@ -70,14 +73,11 @@ public class TestUtils {
 	 * @param height The height of the display
 	 */
 	private void initGL(int width, int height) {
-		try {
-			Display.setDisplayMode(new DisplayMode(width,height));
-			Display.create();
-			Display.setVSyncEnabled(true);
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		window = glfwCreateWindow(100, 100, "LWJGL 3 - Display Test", 0, 0);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_SMOOTH);        
@@ -104,7 +104,7 @@ public class TestUtils {
 	 */
 	public void init() {
 		// turn off all but errors
-		Log.setVerbose(false);
+		LOG.setVerbose(false);
 
 		java.awt.Font awtFont = new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 16);
 		font = new TrueTypeFont(awtFont, false);
@@ -159,32 +159,32 @@ public class TestUtils {
 	 * Game loop update
 	 */
 	public void update() {
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_Q) {
-					// play as a one off sound effect
-					oggEffect.playAsSoundEffect(1.0f, 1.0f, false);
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_W) {
-					// replace the music thats curretly playing with 
-					// the ogg
-					oggStream.playAsMusic(1.0f, 1.0f, true);
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_E) {
-					// replace the music thats curretly playing with 
-					// the mod
-					modStream.playAsMusic(1.0f, 1.0f, true);
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
-					// play as a one off sound effect
-					aifEffect.playAsSoundEffect(1.0f, 1.0f, false);
-				}
-				if (Keyboard.getEventKey() == Keyboard.KEY_T) {
-					// play as a one off sound effect
-					wavEffect.playAsSoundEffect(1.0f, 1.0f, false);
-				}
-			}
-		}
+//		while (Keyboard.next()) {
+//			if (Keyboard.getEventKeyState()) {
+//				if (Keyboard.getEventKey() == Keyboard.KEY_Q) {
+//					// play as a one off sound effect
+//					oggEffect.playAsSoundEffect(1.0f, 1.0f, false);
+//				}
+//				if (Keyboard.getEventKey() == Keyboard.KEY_W) {
+//					// replace the music thats curretly playing with
+//					// the ogg
+//					oggStream.playAsMusic(1.0f, 1.0f, true);
+//				}
+//				if (Keyboard.getEventKey() == Keyboard.KEY_E) {
+//					// replace the music thats curretly playing with
+//					// the mod
+//					modStream.playAsMusic(1.0f, 1.0f, true);
+//				}
+//				if (Keyboard.getEventKey() == Keyboard.KEY_R) {
+//					// play as a one off sound effect
+//					aifEffect.playAsSoundEffect(1.0f, 1.0f, false);
+//				}
+//				if (Keyboard.getEventKey() == Keyboard.KEY_T) {
+//					// play as a one off sound effect
+//					wavEffect.playAsSoundEffect(1.0f, 1.0f, false);
+//				}
+//			}
+//		}
 		
 		// polling is required to allow streaming to get a chance to
 		// queue buffers.

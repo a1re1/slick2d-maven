@@ -1,14 +1,8 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.FastTrig;
 
 /**
@@ -38,15 +32,20 @@ public class GraphicsTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		this.container = container;
-		
-		image = new Image("testdata/logo.tga", true);
-		
-		Image temp = new Image("testdata/palette_tool.png");
-		container.setMouseCursor(temp, 0, 0);
-		
-		container.setIcons(new String[] {"testdata/icon.tga"});
+
+		try {
+			image = new Image("testdata/logo.tga", true);
+
+			Image temp = new Image("testdata/palette_tool.png");
+			container.setMouseCursor(temp, 0, 0);
+
+			container.setIcons(new String[]{"testdata/icon.tga"});
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
+
 		container.setTargetFrameRate(100);
 		
 		poly = new Polygon();
@@ -138,10 +137,10 @@ public class GraphicsTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
-		if (key == Input.KEY_SPACE) {
+		if (key == USKeyboard.KEY_SPACE) {
 			clip = !clip;
 		}
 	}
@@ -152,12 +151,8 @@ public class GraphicsTest extends BasicGame {
 	 * @param argv The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new GraphicsTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new GraphicsTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

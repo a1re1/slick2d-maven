@@ -1,11 +1,8 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.Input;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test for basic image rendering
@@ -28,9 +25,9 @@ public class KeyRepeatTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		input = container.getInput();
-		input.enableKeyRepeat(300,100);
+//		input.enableKeyRepeat(300,100);
 	}
 
 	/**
@@ -39,7 +36,7 @@ public class KeyRepeatTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) {
 		g.drawString("Key Press Count: "+count, 100,100);
 		g.drawString("Press Space to Toggle Key Repeat", 100,150);
-		g.drawString("Key Repeat Enabled: "+input.isKeyRepeatEnabled(), 100,200);
+//		g.drawString("Key Repeat Enabled: "+input.isKeyRepeatEnabled(), 100,200);
 	}
 
 	/**
@@ -54,13 +51,9 @@ public class KeyRepeatTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new KeyRepeatTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new KeyRepeatTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	/**
@@ -68,12 +61,12 @@ public class KeyRepeatTest extends BasicGame {
 	 */
 	public void keyPressed(int key, char c) {
 		count++;
-		if (key == Input.KEY_SPACE) {
-			if (input.isKeyRepeatEnabled()) {
-				input.disableKeyRepeat();
-			} else {
-				input.enableKeyRepeat(300,100);
-			}
+		if (key == USKeyboard.KEY_SPACE) {
+//			if (input.isKeyRepeatEnabled()) {
+//				input.disableKeyRepeat();
+//			} else {
+//				input.enableKeyRepeat(300,100);
+//			}
 		}
 	}
 }

@@ -3,14 +3,8 @@ package org.newdawn.slick.tests;
 import java.awt.Font;
 import java.util.ArrayList;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A test of the font rendering capabilities
@@ -41,7 +35,7 @@ public class TrueTypeFontPerformanceTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.Game#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		awtFont = new java.awt.Font("Verdana", Font.PLAIN, 16);
 		font = new TrueTypeFont(awtFont, false);
 
@@ -85,10 +79,10 @@ public class TrueTypeFontPerformanceTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
-		if (key == Input.KEY_SPACE) {
+		if (key == USKeyboard.KEY_SPACE) {
 			visible = !visible;
 		}
 	}
@@ -100,13 +94,9 @@ public class TrueTypeFontPerformanceTest extends BasicGame {
 	 *            The arguments passed in the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(
-					new TrueTypeFontPerformanceTest());
-			container.setDisplayMode(800, 600, false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(
+				new TrueTypeFontPerformanceTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800, 600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

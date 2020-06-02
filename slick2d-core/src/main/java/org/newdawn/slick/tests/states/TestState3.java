@@ -5,12 +5,14 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.input.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.Log;
 
 /**
  * A simple test state to display an image and rotate it
@@ -18,6 +20,8 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
  * @author kevin
  */
 public class TestState3 extends BasicGameState {
+	private static final Log LOG = new Log(TestState3.class);
+
 	/** The ID given to this state */
 	public static final int ID = 3;
 	/** The font to write the message with */
@@ -39,8 +43,12 @@ public class TestState3 extends BasicGameState {
 	/**
 	 * @see org.newdawn.slick.state.BasicGameState#init(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
 	 */
-	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
+	public void init(GameContainer container, StateBasedGame game) {
+		try {
+			font = new AngelCodeFont("testdata/demo2.fnt", "testdata/demo2_00.tga");
+		} catch (SlickException e) {
+			LOG.error("Caught exception: {}", e);
+		}
 		this.game = game;
 	}
 
@@ -71,22 +79,22 @@ public class TestState3 extends BasicGameState {
 	 * @see org.newdawn.slick.state.BasicGameState#keyReleased(int, char)
 	 */
 	public void keyReleased(int key, char c) {
-		if (key == Input.KEY_DOWN) {
+		if (key == USKeyboard.KEY_DOWN) {
 			selected++;
 			if (selected >= options.length) {
 				selected = 0;
 			}
 		}
-		if (key == Input.KEY_UP) {
+		if (key == USKeyboard.KEY_UP) {
 			selected--;
 			if (selected < 0) {
 				selected = options.length - 1;
 			}
 		}
-		if (key == Input.KEY_1) {
+		if (key == USKeyboard.KEY_1) {
 			game.enterState(TestState1.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 		}
-		if (key == Input.KEY_2) {
+		if (key == USKeyboard.KEY_2) {
 			game.enterState(TestState2.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
 		}
 	}

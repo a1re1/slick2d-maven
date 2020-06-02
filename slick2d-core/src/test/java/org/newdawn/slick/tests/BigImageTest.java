@@ -1,15 +1,8 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.BigImage;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
+import org.newdawn.slick.util.Log;
 
 /**
  * A test for basic image rendering
@@ -17,6 +10,8 @@ import org.newdawn.slick.SpriteSheet;
  * @author kevin
  */
 public class BigImageTest extends BasicGame {
+	private static final Log LOG = new Log(BigImageTest.class);
+
 	/** The original 1024x768 image loaded */
 	private Image original;
 	/** The image scaled */
@@ -48,13 +43,19 @@ public class BigImageTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		// force a 256 pixel limit for testing
-		original = image = new BigImage("testdata/bigimage.tga", Image.FILTER_NEAREST, 512);
-		sub = image.getSubImage(210,210,200,130);
-		scaledSub = sub.getScaledCopy(2);
-		image = image.getScaledCopy(0.3f);
-		imageX = image.getFlippedCopy(true, false);
+		try {
+			original = image = new BigImage("testdata/bigimage.tga", Image.FILTER_NEAREST, 512);
+			sub = image.getSubImage(210, 210, 200, 130);
+			scaledSub = sub.getScaledCopy(2);
+			image = image.getScaledCopy(0.3f);
+			imageX = image.getFlippedCopy(true, false);
+		} catch (SlickException e) {
+			LOG.error("Caught exception: {}", e);
+			System.exit(-1);
+		}
+
 		imageY = imageX.getFlippedCopy(true, true);
 		
 		bigSheet = new SpriteSheet(original, 16, 16);
@@ -84,13 +85,9 @@ public class BigImageTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new BigImageTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new BigImageTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	/**
@@ -99,16 +96,16 @@ public class BigImageTest extends BasicGame {
 	public void update(GameContainer container, int delta) throws SlickException {
 		ang += delta * 0.1f;
 		
-		if (container.getInput().isKeyDown(Input.KEY_LEFT)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_LEFT)) {
 			x -= delta * 0.1f;
 		}
-		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_RIGHT)) {
 			x += delta * 0.1f;
 		}
-		if (container.getInput().isKeyDown(Input.KEY_UP)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_UP)) {
 			y -= delta * 0.1f;
 		}
-		if (container.getInput().isKeyDown(Input.KEY_DOWN)) {
+		if (container.getInput().isKeyDown(USKeyboard.KEY_DOWN)) {
 			y += delta * 0.1f;
 		}
 	}

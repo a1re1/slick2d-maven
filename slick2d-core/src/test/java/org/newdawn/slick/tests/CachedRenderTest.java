@@ -1,13 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.CachedRender;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
  * A simple test to show performance gains from cache operations in situtations where
@@ -33,7 +27,7 @@ public class CachedRenderTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(final GameContainer container) throws SlickException {
+	public void init(final GameContainer container) {
 		operations = new Runnable() {
 			public void run() {
 				for (int i=0;i<100;i++) {
@@ -51,7 +45,7 @@ public class CachedRenderTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) throws SlickException {
-		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+		if (container.getInput().isKeyPressed(USKeyboard.KEY_SPACE)) {
 			drawCached = !drawCached;
 		}
 	}
@@ -77,12 +71,8 @@ public class CachedRenderTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new CachedRenderTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new CachedRenderTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

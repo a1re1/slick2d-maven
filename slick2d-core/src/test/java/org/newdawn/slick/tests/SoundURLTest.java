@@ -1,14 +1,7 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -45,14 +38,18 @@ public class SoundURLTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		sound = new Sound(ResourceLoader.getResource("testdata/restart.ogg"));
-		charlie = new Sound(ResourceLoader.getResource("testdata/cbrown01.wav"));
-		engine = new Sound(ResourceLoader.getResource("testdata/engine.wav"));
-		//music = musica = new Music("testdata/SMB-X.XM");
-		music = musica = new Music(ResourceLoader.getResource("testdata/restart.ogg"), false);
-		musicb = new Music(ResourceLoader.getResource("testdata/kirby.ogg"), false);
-		burp = new Sound(ResourceLoader.getResource("testdata/burp.aif"));
+	public void init(GameContainer container) {
+		try {
+			sound = new Sound(ResourceLoader.getResource("testdata/restart.ogg"));
+			charlie = new Sound(ResourceLoader.getResource("testdata/cbrown01.wav"));
+			engine = new Sound(ResourceLoader.getResource("testdata/engine.wav"));
+			//music = musica = new Music("testdata/SMB-X.XM");
+			music = musica = new Music(ResourceLoader.getResource("testdata/restart.ogg"), false);
+			musicb = new Music(ResourceLoader.getResource("testdata/kirby.ogg"), false);
+			burp = new Sound(ResourceLoader.getResource("testdata/burp.aif"));
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -82,32 +79,32 @@ public class SoundURLTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
-		if (key == Input.KEY_SPACE) {
+		if (key == USKeyboard.KEY_SPACE) {
 			sound.play();
 		}
-		if (key == Input.KEY_B) {
+		if (key == USKeyboard.KEY_B) {
 			burp.play();
 		}
-		if (key == Input.KEY_A) {
+		if (key == USKeyboard.KEY_A) {
 			sound.playAt(-1, 0, 0);
 		}
-		if (key == Input.KEY_L) {
+		if (key == USKeyboard.KEY_L) {
 			sound.playAt(1, 0, 0);
 		}
-		if (key == Input.KEY_RETURN) {
+		if (key == USKeyboard.KEY_RETURN) {
 			charlie.play(1.0f,1.0f);
 		}
-		if (key == Input.KEY_P) {
+		if (key == USKeyboard.KEY_P) {
 			if (music.playing()) {
 				music.pause();
 			} else {
 				music.resume();
 			}
 		}
-		if (key == Input.KEY_C) {
+		if (key == USKeyboard.KEY_C) {
 			music.stop();
 			if (music == musica) {
 				music = musicb;
@@ -117,7 +114,7 @@ public class SoundURLTest extends BasicGame {
 			
 			music.loop();
 		}
-		if (key == Input.KEY_E) {
+		if (key == USKeyboard.KEY_E) {
 			if (engine.playing()) {
 				engine.stop();
 			} else {
@@ -157,12 +154,8 @@ public class SoundURLTest extends BasicGame {
 	 * @param argv The arguments provided to the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new SoundURLTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new SoundURLTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

@@ -1,12 +1,8 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.util.Bootstrap;
+import org.newdawn.slick.util.Log;
 
 /**
  * A test to demonstrate world clipping as opposed to screen clipping
@@ -14,6 +10,8 @@ import org.newdawn.slick.SlickException;
  * @author kevin
  */
 public class AlphaMapTest extends BasicGame {
+	private static final Log LOG = new Log(AlphaMapTest.class);
+
 	/** The alpha map being applied */
 	private Image alphaMap;
 	/** The texture to apply over the top */
@@ -29,10 +27,15 @@ public class AlphaMapTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		alphaMap = new Image("testdata/alphamap.png");
-		textureMap = new Image("testdata/grass.png");
-		container.getGraphics().setBackground(Color.black);
+	public void init(GameContainer container) {
+		try {
+			alphaMap = new Image("testdata/alphamap.png");
+			textureMap = new Image("testdata/grass.png");
+			container.getGraphics().setBackground(Color.black);
+		} catch (SlickException e) {
+			LOG.error("Caught exception: {}", e);
+			System.exit(-1);
+		}
 	}
 
 	/**
@@ -73,12 +76,6 @@ public class AlphaMapTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new AlphaMapTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		Bootstrap.runAsApplication(new AlphaMapTest(), 800, 600, DisplayMode.Opt.WINDOWED);
 	}
 }

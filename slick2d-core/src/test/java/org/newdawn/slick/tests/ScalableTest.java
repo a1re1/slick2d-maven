@@ -1,12 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.ScalableGame;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 
 /**
  * A test for a scalable game
@@ -25,7 +19,7 @@ public class ScalableTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 	}
 
 	/**
@@ -81,22 +75,18 @@ public class ScalableTest extends BasicGame {
 //		}
 
 		// maintain aspect ratio
-		try {
-			ScalableGame game = new ScalableGame(new ScalableTest(),1024,568,true) {
+		ScalableGame game = new ScalableGame(new ScalableTest(),1024,568,true) {
 
-				protected void renderOverlay(GameContainer container, Graphics g) {
-					g.setColor(Color.white);
-					g.drawString("Outside The Game", 350, 10);
-					g.drawString(container.getInput().getMouseX()+","+container.getInput().getMouseY(), 400, 20);
-				}
-				
-			};
-			
-			AppGameContainer container = new AppGameContainer(game);
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+			protected void renderOverlay(GameContainer container, Graphics g) {
+				g.setColor(Color.white);
+				g.drawString("Outside The Game", 350, 10);
+				g.drawString(container.getInput().getMouseX()+","+container.getInput().getMouseY(), 400, 20);
+			}
+
+		};
+
+		AppGameContainer container = new AppGameContainer(game, 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

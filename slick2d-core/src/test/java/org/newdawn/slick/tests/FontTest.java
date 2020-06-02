@@ -1,14 +1,7 @@
 package org.newdawn.slick.tests;
 	
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -17,6 +10,8 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class FontTest extends BasicGame {
+	private static final Log LOG = new Log(FontTest.class);
+
 	/** The font we're going to use to render */
 	private AngelCodeFont font;
 	/** The font we're going to use to render */
@@ -34,10 +29,14 @@ public class FontTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.Game#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
-		font2 = new AngelCodeFont("testdata/hiero.fnt","testdata/hiero.png");
-		image = new Image("testdata/demo2_00.tga", false);
+	public void init(GameContainer container) {
+		try {
+			font = new AngelCodeFont("testdata/demo2.fnt", "testdata/demo2_00.tga");
+			font2 = new AngelCodeFont("testdata/hiero.fnt", "testdata/hiero.png");
+			image = new Image("testdata/demo2_00.tga", false);
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -74,15 +73,11 @@ public class FontTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
-		if (key == Input.KEY_ESCAPE) {
+		if (key == USKeyboard.KEY_ESCAPE) {
 			System.exit(0);
 		}
-		if (key == Input.KEY_SPACE) {
-			try {
-				container.setDisplayMode(640, 480, false);
-			} catch (SlickException e) {
-				Log.error(e);
-			}
+		if (key == USKeyboard.KEY_SPACE) {
+			container.setDisplayMode(640, 480, DisplayMode.Opt.WINDOWED);
 		}
 	}
 	
@@ -95,12 +90,8 @@ public class FontTest extends BasicGame {
 	 * @param argv The arguments passed in the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			container = new AppGameContainer(new FontTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		container = new AppGameContainer(new FontTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 }

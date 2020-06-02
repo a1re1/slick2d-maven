@@ -1,9 +1,6 @@
 package org.newdawn.slick.tests;
 
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Bootstrap;
 
@@ -27,8 +24,12 @@ public class IsoTiledTest extends BasicGame {
 	 * (non-Javadoc)
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
-		tilemap = new TiledMap("testdata/isoexample.tmx", "testdata/");
+	public void init(GameContainer container) {
+		try {
+			tilemap = new TiledMap("testdata/isoexample.tmx", "testdata/");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*
@@ -54,6 +55,6 @@ public class IsoTiledTest extends BasicGame {
 	 * @param argv The arguments passed in from the command line
 	 */
 	public static void main(String[] argv) {
-		Bootstrap.runAsApplication(new IsoTiledTest(), 800,600,false);
+		Bootstrap.runAsApplication(new IsoTiledTest(), 800,600, DisplayMode.Opt.WINDOWED);
 	}
 }

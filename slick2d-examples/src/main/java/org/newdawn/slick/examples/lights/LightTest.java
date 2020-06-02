@@ -2,14 +2,9 @@ package org.newdawn.slick.examples.lights;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
+import org.newdawn.slick.input.Input;
+import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 import org.newdawn.slick.util.Bootstrap;
 
 /**
@@ -65,12 +60,27 @@ public class LightTest extends BasicGame {
 
 	/**
 	 * Initialise our resources for the example
-	 * 
+	 *
 	 * @param container The game container the game is running in
 	 */
-	public void init(GameContainer container) throws SlickException {
-		tiles = new SpriteSheet("testdata/tiles.png", 32,32);
+	public void init(GameContainer container) {
+		try {
+			tiles = new SpriteSheet("testdata/tiles.png", 32, 32);
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 		generateMap();
+		bindControls();
+	}
+
+	private void bindControls() {
+		// toggle the lighting on/off
+		Input.bindKeyPress(USKeyboard.KEY_L, false, () -> lightingOn = !lightingOn);
+		// change light color
+		Input.bindKeyPress(USKeyboard.KEY_C, false, () -> {
+			colouredLights = !colouredLights;
+			updateLightMap();
+		});
 	}
 
 	/**
@@ -143,19 +153,7 @@ public class LightTest extends BasicGame {
 	 * @param container The container the game is running in
 	 * @param delta The amount of time that passed since last update (in seconds)
 	 */
-	public void update(GameContainer container, int delta)
-			throws SlickException {
-		// toggle the lighting on/off
-		if (container.getInput().isKeyPressed(Input.KEY_L)){
-			lightingOn = !lightingOn;
-		}
-		// toggle the use of coloured lighting on/off
-		if (container.getInput().isKeyPressed(Input.KEY_C)){
-			colouredLights = !colouredLights;
-			// we need to recaculate the lighting values because
-			// colours may now be involved
-			updateLightMap();
-		}
+	public void update(GameContainer container, int delta) {
 	}
 
 	/**
@@ -166,6 +164,7 @@ public class LightTest extends BasicGame {
 	 * @param newx The new x coordinate of the mouse
 	 * @param newy The new y coordinate of the mouse
 	 */
+	@Override
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 		mousePressed(0, newx, newy);
 	}
@@ -188,8 +187,7 @@ public class LightTest extends BasicGame {
 	 * @param container The container the game is running in
 	 * @param g The graphics context to which we can render
 	 */
-	public void render(GameContainer container, Graphics g)
-			throws SlickException {
+	public void render(GameContainer container, Graphics g) {
 		// display some instructions on how to use the example
 		g.setColor(Color.white);
 		g.drawString("Lighting Example", 440, 5);
@@ -240,7 +238,7 @@ public class LightTest extends BasicGame {
 	 * @param argv The arguments provided at the command line
 	 */
 	public static void main(String[] argv) {
-		Bootstrap.runAsApplication(new LightTest(), 600, 600, false);
+		Bootstrap.runAsApplication(new LightTest(), 600, 600, DisplayMode.Opt.WINDOWED);
 	}
 }
 

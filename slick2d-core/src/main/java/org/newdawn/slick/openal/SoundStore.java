@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.security.AccessController;
@@ -11,12 +12,13 @@ import java.security.PrivilegedAction;
 import java.util.HashMap;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
-import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.OpenALException;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
+
+import static org.lwjgl.openal.ALC10.*;
 
 /**
  * Responsible for holding and playing the sounds used in the game.
@@ -25,7 +27,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author Rockstar setVolume cleanup 
  */
 public class SoundStore {
-	
+	private static final Log LOG = new Log(SoundStore.class);
+
 	/** The single instance of this class */
 	private static SoundStore store = new SoundStore();
 	
@@ -286,20 +289,25 @@ public class SoundStore {
 		if (inited) {
 			return;
 		}
-		Log.info("Initialising sounds..");
+		LOG.info("Initialising sounds..");
 		inited = true;
 		
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
 				try {
-					AL.create();
+					long device = alcOpenDevice((ByteBuffer)null);
+					ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+
+					long context = alcCreateContext(device, (IntBuffer)null);
+					alcMakeContextCurrent(context);
+
 					soundWorks = true;
 					sounds = true;
 					music = true;
-					Log.info("- Sound works");
+					LOG.info("- Sound works");
 				} catch (Exception e) {
-					Log.error("Sound initialisation failure.");
-					Log.error(e);
+					LOG.error("Sound initialisation failure.");
+					LOG.error(e);
 					soundWorks = false;
 					sounds = false;
 					music = false;
@@ -314,28 +322,23 @@ public class SoundStore {
 			while (AL10.alGetError() == AL10.AL_NO_ERROR) {
 				IntBuffer temp = BufferUtils.createIntBuffer(1);
 				
-				try {
-					AL10.alGenSources(temp);
-				
-					if (AL10.alGetError() == AL10.AL_NO_ERROR) {
-						sourceCount++;
-						sources.put(temp.get(0));
-						if (sourceCount > maxSources-1) {
-							break;
-						}
-					} 
-				} catch (OpenALException e) {
-					// expected at the end
-					break;
+				AL10.alGenSources(temp);
+
+				if (AL10.alGetError() == AL10.AL_NO_ERROR) {
+					sourceCount++;
+					sources.put(temp.get(0));
+					if (sourceCount > maxSources-1) {
+						break;
+					}
 				}
 			}
-			Log.info("- "+sourceCount+" OpenAL source available");
+			LOG.info("- "+sourceCount+" OpenAL source available");
 		
 			if (AL10.alGetError() != AL10.AL_NO_ERROR) {
 				sounds = false;
 				music = false;
 				soundWorks = false;
-				Log.error("- AL init failed");
+				LOG.error("- AL init failed");
 			} else {
 				FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6).put(
 						new float[] { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f });
@@ -346,11 +349,11 @@ public class SoundStore {
 				listenerPos.flip();
 				listenerVel.flip();
 				listenerOri.flip();
-				AL10.alListener(AL10.AL_POSITION, listenerPos);
-				AL10.alListener(AL10.AL_VELOCITY, listenerVel);
-				AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
+				AL10.alListenerfv(AL10.AL_POSITION, listenerPos);
+				AL10.alListenerfv(AL10.AL_VELOCITY, listenerVel);
+				AL10.alListenerfv(AL10.AL_ORIENTATION, listenerOri);
    			 
-				Log.info("- Sounds source generated");
+				LOG.info("- Sounds source generated");
 			}
 		}
 	}
@@ -416,8 +419,8 @@ public class SoundStore {
 				sourcePos.put(new float[] { x, y, z });
 			    sourcePos.flip();
 			    sourceVel.flip();
-			    AL10.alSource(sources.get(nextSource), AL10.AL_POSITION, sourcePos);
-    			AL10.alSource(sources.get(nextSource), AL10.AL_VELOCITY, sourceVel);
+			    AL10.alSourcefv(sources.get(nextSource), AL10.AL_POSITION, sourcePos);
+    			AL10.alSourcefv(sources.get(nextSource), AL10.AL_VELOCITY, sourceVel);
 			    
 				AL10.alSourcePlay(sources.get(nextSource)); 
 				
@@ -644,7 +647,7 @@ public class SoundStore {
 				loaded.put(ref,new Integer(buf.get(0)));
 				buffer = buf.get(0);
 			} catch (Exception e) {
-				Log.error(e);
+				LOG.error(e);
 				IOException x = new IOException("Failed to load: "+ref);
 				x.initCause(e);
 				
@@ -717,7 +720,7 @@ public class SoundStore {
 				loaded.put(ref,new Integer(buf.get(0)));
 				buffer = buf.get(0);
 			} catch (Exception e) {
-				Log.error(e);
+				LOG.error(e);
 				IOException x = new IOException("Failed to load: "+ref);
 				x.initCause(e);
 				
@@ -841,8 +844,9 @@ public class SoundStore {
 				                     
 				buffer = buf.get(0);
 			} catch (Exception e) {
-				Log.error(e);
-				Sys.alert("Error","Failed to load: "+ref+" - "+e.getMessage());
+				LOG.error(e);
+				// TODO what did sys alert do before? should it kill some context?
+//				Sys.alert("Error","Failed to load: "+ref+" - "+e.getMessage());
 				throw new IOException("Unable to load: "+ref);
 			}
 		}
@@ -907,22 +911,10 @@ public class SoundStore {
 
 		if (music) {
 			if (mod != null) {
-				try {
-					mod.poll();
-				} catch (OpenALException e) {
-					Log.error("Error with OpenGL MOD Player on this this platform");
-					Log.error(e);
-					mod = null;
-				}
+				mod.poll();
 			}
 			if (stream != null) {
-				try {
-					stream.update();
-				} catch (OpenALException e) {
-					Log.error("Error with OpenGL Streaming Player on this this platform");
-					Log.error(e);
-					mod = null;
-				}
+				stream.update();
 			}
 		}
 	}

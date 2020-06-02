@@ -2,16 +2,7 @@ package org.newdawn.slick.tests;
 
 import java.io.IOException;
 
-import org.newdawn.slick.AngelCodeFont;
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
+import org.newdawn.slick.*;
 import org.newdawn.slick.loading.DeferredResource;
 import org.newdawn.slick.loading.LoadingList;
 
@@ -46,27 +37,31 @@ public class DeferredLoadingTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
-	public void init(GameContainer container) throws SlickException {
+	public void init(GameContainer container) {
 		LoadingList.setDeferredLoading(true);
-		
-		new Sound("testdata/cbrown01.wav");
-		new Sound("testdata/engine.wav");
-		sound = new Sound("testdata/restart.ogg");
-		new Music("testdata/testloop.ogg");
-		music = new Music("testdata/SMB-X.XM");
-		
-		new Image("testdata/cursor.png");
-		new Image("testdata/cursor.tga");
-		new Image("testdata/cursor.png");
-		new Image("testdata/cursor.png");
-		new Image("testdata/dungeontiles.gif");
-		new Image("testdata/logo.gif");
-		image = new Image("testdata/logo.tga");
-		new Image("testdata/logo.png");
-		new Image("testdata/rocket.png");
-		new Image("testdata/testpack.png");
-		
-		font = new AngelCodeFont("testdata/demo.fnt", "testdata/demo_00.tga");
+
+		try {
+			new Sound("testdata/cbrown01.wav");
+			new Sound("testdata/engine.wav");
+			sound = new Sound("testdata/restart.ogg");
+			new Music("testdata/testloop.ogg");
+			music = new Music("testdata/SMB-X.XM");
+
+			new Image("testdata/cursor.png");
+			new Image("testdata/cursor.tga");
+			new Image("testdata/cursor.png");
+			new Image("testdata/cursor.png");
+			new Image("testdata/dungeontiles.gif");
+			new Image("testdata/logo.gif");
+			image = new Image("testdata/logo.tga");
+			new Image("testdata/logo.png");
+			new Image("testdata/rocket.png");
+			new Image("testdata/testpack.png");
+
+			font = new AngelCodeFont("testdata/demo.fnt", "testdata/demo_00.tga");
+		} catch (SlickException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -123,13 +118,9 @@ public class DeferredLoadingTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		try {
-			AppGameContainer container = new AppGameContainer(new DeferredLoadingTest());
-			container.setDisplayMode(800,600,false);
-			container.start();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
+		AppGameContainer container = new AppGameContainer(new DeferredLoadingTest(), 800, 600, DisplayMode.Opt.WINDOWED);
+		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
+		container.start();
 	}
 
 	/**

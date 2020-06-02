@@ -46,15 +46,19 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioFormat.Encoding;
 
 import org.lwjgl.openal.AL10;
+import org.newdawn.slick.util.Log;
 
 /**
  *
  * Utitlity class for loading wavefiles.
  *
  * @author Brian Matzon <brian@matzon.dk>
+ * @author tyler
  * @version $Revision: 2286 $
  */
 public class AiffData {
+	private static final Log LOG = new Log(AiffData.class);
+
 	/** actual AIFF data */
 	public final ByteBuffer data;
 
@@ -96,7 +100,7 @@ public class AiffData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(path.openStream())));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from: " + path);
+			LOG.error("Unable to create from: " + path);
 			e.printStackTrace();
 			return null;
 		}		
@@ -123,7 +127,7 @@ public class AiffData {
 			return create(
 				AudioSystem.getAudioInputStream(is));
 		} catch (Exception e) {
-			org.lwjgl.LWJGLUtil.log("Unable to create from inputstream");
+			LOG.error("Unable to create from inputstream");
 			e.printStackTrace();
 			return null;
 		}		
