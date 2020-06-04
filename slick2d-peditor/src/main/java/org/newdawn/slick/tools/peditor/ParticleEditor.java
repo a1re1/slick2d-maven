@@ -28,7 +28,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.lwjgl.LWJGLException;
 import org.newdawn.slick.CanvasGameContainer;
 import org.newdawn.slick.InputListener;
 import org.newdawn.slick.SlickException;
@@ -44,6 +43,7 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class ParticleEditor extends JFrame {
+	private static final Log LOG = new Log(ParticleEditor.class);
 	/** The canvas displaying the particles */
 	private ParticleGame game;
 	/** Create a new system */
@@ -107,10 +107,9 @@ public class ParticleEditor extends JFrame {
 	/**
 	 * Create a new editor
 	 * 
-	 * @throws LWJGLException Indicates a failure to create an OpenGL context
-	 * @throws SlickException 
+	 * @throws SlickException
 	 */
-	public ParticleEditor() throws LWJGLException, SlickException {
+	public ParticleEditor() throws SlickException {
 		super("Pedigree - Whiskas flavoured");
 
 		xmlFileFilter = new FileFilter() {
@@ -335,11 +334,7 @@ public class ParticleEditor extends JFrame {
 
 		emitters.setSelected(0);
 		
-		try {
-			container.start();
-		} catch (SlickException e1) {
-			Log.error(e1);
-		}
+		container.start();
 	}
 	
 	/**
@@ -446,7 +441,7 @@ public class ParticleEditor extends JFrame {
 				addEmitter(emitter);
 				emitters.setSelected(emitter);
 			} catch (IOException e) {
-				Log.error(e);
+				LOG.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
@@ -470,7 +465,7 @@ public class ParticleEditor extends JFrame {
 			addEmitter(emitter);
 			emitters.setSelected(emitter);
 		} catch (IOException e) {
-			Log.error(e);
+			LOG.error(e);
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 	}
@@ -494,7 +489,7 @@ public class ParticleEditor extends JFrame {
 			try {
 				ParticleIO.saveEmitter(file, selected);
 			} catch (IOException e) {
-				Log.error(e);
+				LOG.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
@@ -567,7 +562,7 @@ public class ParticleEditor extends JFrame {
 				
 				emitters.setSelected(0);
 			} catch (IOException e) {
-				Log.error(e);
+				LOG.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
@@ -587,7 +582,7 @@ public class ParticleEditor extends JFrame {
 			try {
 				ParticleIO.saveConfiguredSystem(file, game.getSystem());
 			} catch (IOException e) {
-				Log.error(e);
+				LOG.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
 		}
@@ -669,7 +664,7 @@ public class ParticleEditor extends JFrame {
 		
 			new ParticleEditor();
 		} catch (Exception e) {
-			Log.error(e);
+			LOG.error(e);
 		}
 	}
 }

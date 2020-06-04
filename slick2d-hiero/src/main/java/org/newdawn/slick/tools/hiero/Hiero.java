@@ -150,6 +150,8 @@ public class Hiero extends JFrame {
 	JMenuItem saveBMFontMenuItem;
 	File saveBmFontFile;
 
+	private static final Log LOG = new Log(Hiero.class);
+
 	public Hiero () throws SlickException {
 		super("Hiero v2.0 - Bitmap Font Tool");
 		Splash splash = new Splash(this, "splash.jpg", 2000);
@@ -243,7 +245,7 @@ public class Hiero extends JFrame {
 						BMFontUtil bmFont = new BMFontUtil(unicodeFont);
 						bmFont.save(saveBmFontFile);
 					} catch (Exception ex) {
-						Log.error("Error saving BMFont files: " + saveBmFontFile.getAbsolutePath(), ex);
+						LOG.error("Error saving BMFont files: " + saveBmFontFile.getAbsolutePath(), ex);
 					} finally {
 						saveBmFontFile = null;
 					}

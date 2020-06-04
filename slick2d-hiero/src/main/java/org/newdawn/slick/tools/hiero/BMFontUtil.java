@@ -34,6 +34,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author Nathan Sweet <misc@n4te.com>
  */
 public class BMFontUtil {
+	private static final Log LOG = new Log(BMFontUtil.class);
+
 	private final UnicodeFont unicodeFont;
 
 	public BMFontUtil (UnicodeFont unicodeFont) {
@@ -101,13 +103,13 @@ public class BMFontUtil {
 
 		String ttfFileRef = unicodeFont.getFontFile();
 		if (ttfFileRef == null)
-			Log.warn("Kerning information could not be output because a TTF font file was not specified.");
+			LOG.warn("Kerning information could not be output because a TTF font file was not specified.");
 		else {
 			Kerning kerning = new Kerning();
 			try {
 				kerning.load(ResourceLoader.getResourceAsStream(ttfFileRef), font.getSize());
 			} catch (IOException ex) {
-				Log.warn("Unable to read kerning information from font: " + ttfFileRef);
+				LOG.warn("Unable to read kerning information from font: " + ttfFileRef);
 			}
 
 			Map glyphCodeToCodePoint = new HashMap();
