@@ -92,8 +92,8 @@ public class TestBox extends BasicGame {
 
 	@Override
 	public void bindControls() {
-		Input.bindKeyPress(USKeyboard.KEY_ENTER, false, this::nextGame);
-		Input.bindKeyPress(USKeyboard.KEY_BACK, false, this::previousGame);
+		Input.bindKeyPress(USKeyboard.KEY_ENTER, false, (delta) -> nextGame());
+		Input.bindKeyPress(USKeyboard.KEY_BACK, false, (delta) -> previousGame());
 	}
 
 	/**

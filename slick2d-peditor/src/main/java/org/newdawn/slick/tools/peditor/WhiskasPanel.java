@@ -38,7 +38,7 @@ public class WhiskasPanel extends ControlPanel {
 			final EmissionControls emissionControls) {
 		setLayout(null);
 		setBorder(BorderFactory
-				.createTitledBorder("Particle Life Time Gradients"));
+				.createTitledBorder("Particle Life org.newdawn.slick.Time Gradients"));
 
 		// add checkbox controls for all linear values
 		addEnableControl("Alpha", new ItemListener() {

@@ -18,7 +18,7 @@ public class FireEmitter implements ParticleEmitter {
 	
 	/** The particle emission rate */
 	private int interval = 50;
-	/** Time til the next particle */
+	/** org.newdawn.slick.Time til the next particle */
 	private int timer;
 	/** The size of the initial particles */
 	private float size = 40;

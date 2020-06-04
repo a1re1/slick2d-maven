@@ -73,11 +73,11 @@ public class LightTest extends BasicGame {
 		bindControls();
 	}
 
-	private void bindControls() {
+	public void bindControls() {
 		// toggle the lighting on/off
-		Input.bindKeyPress(USKeyboard.KEY_L, false, () -> lightingOn = !lightingOn);
+		Input.bindKeyPress(USKeyboard.KEY_L, false, (delta) -> lightingOn = !lightingOn);
 		// change light color
-		Input.bindKeyPress(USKeyboard.KEY_C, false, () -> {
+		Input.bindKeyPress(USKeyboard.KEY_C, false, (delta) -> {
 			colouredLights = !colouredLights;
 			updateLightMap();
 		});

@@ -1,6 +1,7 @@
 package org.newdawn.slick.tests;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.input.Input;
 import org.newdawn.slick.input.sources.keymaps.USKeyboard;
 
 /**
@@ -65,15 +66,9 @@ public class FlashTest extends BasicGame {
 		container.start();
 	}
 
-	/**
-	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
-	 */
-	public void keyPressed(int key, char c) {
-		if (key == USKeyboard.KEY_SPACE) {
-			flash = !flash;
-		}
-		if (key == USKeyboard.KEY_ESCAPE) {
-			container.exit();
-		}
+	@Override
+	public void bindControls() {
+		Input.bindKeyPress(USKeyboard.KEY_S, (ignored) -> flash = !flash);
+		Input.bindKeyPress(USKeyboard.KEY_ESCAPE, (ignored) -> container.exit());
 	}
 }

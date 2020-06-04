@@ -496,7 +496,7 @@ public class Animation implements Renderable {
 	 * @param delta The amount of time thats passed since last update
 	 */
 	public void update(long delta) {
-		nextFrame(delta);
+		nextFrame(Time.getDeltaMillis());
 	}
 	
 	/**

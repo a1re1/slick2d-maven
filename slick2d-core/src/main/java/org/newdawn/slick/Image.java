@@ -858,9 +858,9 @@ public class Image implements Renderable {
 
 		if (GL.canSecondaryColor()) {
 			GL.glEnable(SGL.GL_COLOR_SUM_EXT);
-			GL.glSecondaryColor3ubEXT((byte)(col.r * 255), 
-													 (byte)(col.g * 255), 
-													 (byte)(col.b * 255));
+			GL.glSecondaryColor3ubEXT((byte)(col.r * 255),
+					(byte)(col.g * 255),
+					(byte)(col.b * 255));
 		}
 		
 		GL.glTexEnvi(SGL.GL_TEXTURE_ENV, SGL.GL_TEXTURE_ENV_MODE, SGL.GL_MODULATE);

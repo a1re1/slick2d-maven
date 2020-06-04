@@ -35,8 +35,9 @@ public class AnimationTest extends BasicGame {
 
 	@Override
 	public void bindControls() {
-		Input.bindKeyPress(USKeyboard.KEY_ESCAPE, container::exit);
-		Input.bindKeyPress(USKeyboard.KEY_SPACE, limited::restart);
+		Input.bindKeyPress(USKeyboard.KEY_ESCAPE, (delta) -> container.exit());
+		Input.bindKeyPress(USKeyboard.KEY_SPACE, (delta) -> limited.restart());
+		Input.bindKeyPress(USKeyboard.KEY_1, true, -1, (delta) -> manual.update((int)delta));
 	}
 
 	/**
@@ -94,9 +95,6 @@ public class AnimationTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) {
-		if (container.getInput().isKeyDown(USKeyboard.KEY_1)) {
-			manual.update(delta);
-		}
 		if (start >= 0) {
 			start -= delta;
 		}
@@ -111,11 +109,5 @@ public class AnimationTest extends BasicGame {
 		AppGameContainer container = new AppGameContainer(new AnimationTest(), 800, 600, DisplayMode.Opt.WINDOWED);
 		container.setDisplayMode(800,600, DisplayMode.Opt.WINDOWED);
 		container.start();
-	}
-
-	/**
-	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
-	 */
-	public void keyPressed(int key, char c) {
 	}
 }

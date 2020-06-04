@@ -91,7 +91,7 @@ public class GraphEditorWindow extends JPanel {
 	private static Color COLOR_LABEL = new Color(0x000000);
 
 	/** The x axis label */
-	private static final String TEXT_CURRENT_X = "Time: ";
+	private static final String TEXT_CURRENT_X = "org.newdawn.slick.Time: ";
 	/** The y axis label */
 	private static final String TEXT_CURRENT_Y = "Value: ";
 

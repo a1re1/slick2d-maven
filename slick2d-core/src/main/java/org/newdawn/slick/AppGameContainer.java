@@ -148,8 +148,6 @@ public class AppGameContainer extends GameContainer {
 		//			InternalTextureLoader.get().set16BitMode();
 		//		}
 
-		getDelta();
-
 		// TODO did I miss anything?
 		//		try {
 		//			if (displayOption == DisplayMode.Opt.FULLSCREEN) {
@@ -201,22 +199,18 @@ public class AppGameContainer extends GameContainer {
 		//		} catch (LWJGLException e) {
 		//			throw new SlickException("Unable to setup mode "+width+"x"+height+" fullscreen="+fullscreen, e);
 		//		}
-		//
-		//		getDelta();
 	}
 
 	public boolean isFullscreen() {
 		return DisplayMode.getDisplayType() == DisplayMode.Opt.FULLSCREEN ;
 	}
 
-	public void setFullscreen(DisplayMode.Opt displayType) throws SlickException {
+	public void setFullscreen(DisplayMode.Opt displayType) {
 		if (DisplayMode.getDisplayType() == displayType) {
 			return;
 		}
 		
 		setDisplayMode(width, height, displayType);
-
-		getDelta();
 	}
 
 	public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
@@ -331,7 +325,6 @@ public class AppGameContainer extends GameContainer {
 		try {
 			setup();
 			
-			getDelta();
 			while (running()) {
 				gameLoop();
 			}
@@ -366,7 +359,6 @@ public class AppGameContainer extends GameContainer {
 		org.lwjgl.opengl.GL.createCapabilities();
 
 		initGL();
-		getDelta();
 		initSystem();
 		enterOrtho();
 
@@ -387,7 +379,9 @@ public class AppGameContainer extends GameContainer {
 	}
 
 	protected void gameLoop() {
-		int delta = getDelta();
+		Time.updateDelta();
+
+		int delta = Time.getDeltaMillis();
 		if (!isVisible() && updateOnlyOnVisible) {
 			try { Thread.sleep(100); } catch (Exception e) {}
 		} else {
@@ -460,7 +454,8 @@ public class AppGameContainer extends GameContainer {
 			}
 		}
 
-		GLFW.glfwSetWindowIcon(GAME_WINDOW, new GLFWImage.Buffer(bufs[0]));
+		// FIXME this does not actually set icon because its broken
+//		GLFW.glfwSetWindowIcon(GAME_WINDOW, new GLFWImage.Buffer(bufs[0]));
 	}
 
 	public void setDefaultMouseCursor() {

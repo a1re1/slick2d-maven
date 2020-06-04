@@ -242,23 +242,28 @@ public class Input {
 	}
 
 	public static void bindKeyPress(int boundKey, boolean enableRepeatPress, KeyPress.Action event) {
+		bindKeyPress(boundKey, enableRepeatPress, -1, event);
+	}
+
+	public static void bindKeyPress(int boundKey, boolean enableRepeatPress, int ratePerSecond, KeyPress.Action event) {
 		LOG.info("Bound key: {} - repeatEnabled: {}", boundKey, enableRepeatPress);
-		keyPressBindings.put(boundKey, KeyPress.of(enableRepeatPress, event));
+		keyPressBindings.put(boundKey, KeyPress.of(enableRepeatPress, ratePerSecond, event));
 	}
 
 	private void bindKeyInput() {
 		GLFW.glfwSetKeyCallback(GAME_WINDOW, (window, key, scancode, action, mods) -> {
-			if (action == GLFW.GLFW_PRESS) {
-				if (keyPressBindings.containsKey(key)) {
+			if (keyPressBindings.containsKey(key)) {
+				if (action == GLFW.GLFW_PRESS) {
 					pressedKeys.add(key);
+					keyPressBindings.get(key).forEach(KeyPress::pressKey);
+					LOG.trace("pressed key: " + key + " - action: " + action);
+				} else if (action == GLFW.GLFW_REPEAT) {
+					pressedKeys.add(key);
+					LOG.trace("repeated key: " + key + " - action: " + action);
+				} else if (action == GLFW.GLFW_RELEASE) {
+					pressedKeys.setCount(key, 0);
+					LOG.trace("released key: " + key + " - action: " + action);
 				}
-				LOG.trace("pressed key: " + key + " - action: " + action);
-			} else if (action == GLFW.GLFW_REPEAT) {
-				pressedKeys.add(key);
-				LOG.trace("repeated key: " + key + " - action: " + action);
-			} else if (action == GLFW.GLFW_RELEASE) {
-				pressedKeys.setCount(key, 0);
-				LOG.trace("released key: " + key + " - action: " + action);
 			}
 		});
 	}
@@ -672,143 +677,6 @@ public class Input {
 			listener.inputStarted();
 		}
 
-		// TODO this is currently always false, and I think it still works
-//		while (Keyboard.next()) {
-//			if (Keyboard.getEventKeyState()) {
-//				int eventKey = resolveEventKey(Keyboard.getEventKey(), Keyboard.getEventCharacter());
-//
-//				keys[eventKey] = Keyboard.getEventCharacter();
-//				pressed[eventKey] = true;
-//				nextRepeat[eventKey] = System.currentTimeMillis() + keyRepeatInitial;
-//
-//				consumed = false;
-//				for (int i=0;i<keyListeners.size();i++) {
-//					KeyListener listener = keyListeners.get(i);
-//
-//					if (listener.isAcceptingInput()) {
-//						listener.keyPressed(eventKey, Keyboard.getEventCharacter());
-//						if (consumed) {
-//							break;
-//						}
-//					}
-//				}
-//			} else {
-//				int eventKey = resolveEventKey(Keyboard.getEventKey(), Keyboard.getEventCharacter());
-//				nextRepeat[eventKey] = 0;
-//
-//				consumed = false;
-//				for (int i=0;i<keyListeners.size();i++) {
-//					KeyListener listener = keyListeners.get(i);
-//					if (listener.isAcceptingInput()) {
-//						listener.keyReleased(eventKey, keys[eventKey]);
-//						if (consumed) {
-//							break;
-//						}
-//					}
-//				}
-//			}
-//		}
-
-		// TODO don't think this does anything since not supplying the buffer -- would like to translate to callback events
-//		while (Mouse.next()) {
-//			if (Mouse.getEventButton() >= 0) {
-//				if (Mouse.getEventButtonState()) {
-//					consumed = false;
-//					mousePressed[Mouse.getEventButton()] = true;
-//
-//					pressedX = (int) (xOffset + (Mouse.getEventX() * scaleX));
-//					pressedY =  (int) (yOoffset + ((height-Mouse.getEventY()-1) * scaleY));
-//
-//					for (int i=0;i<mouseListeners.size();i++) {
-//						MouseListener listener = (MouseListener) mouseListeners.get(i);
-//						if (listener.isAcceptingInput()) {
-//							listener.mousePressed(Mouse.getEventButton(), pressedX, pressedY);
-//							if (consumed) {
-//								break;
-//							}
-//						}
-//					}
-//				} else {
-//					consumed = false;
-//					mousePressed[Mouse.getEventButton()] = false;
-//
-//					int releasedX = (int) (xOffset + (Mouse.getEventX() * scaleX));
-//					int releasedY = (int) (yOoffset + ((height-Mouse.getEventY()-1) * scaleY));
-//					if ((pressedX != -1) &&
-//					    (pressedY != -1) &&
-//						(Math.abs(pressedX - releasedX) < mouseClickTolerance) &&
-//						(Math.abs(pressedY - releasedY) < mouseClickTolerance)) {
-//						considerDoubleClick(Mouse.getEventButton(), releasedX, releasedY);
-//						pressedX = pressedY = -1;
-//					}
-//
-//					for (int i=0;i<mouseListeners.size();i++) {
-//						MouseListener listener = (MouseListener) mouseListeners.get(i);
-//						if (listener.isAcceptingInput()) {
-//							listener.mouseReleased(Mouse.getEventButton(), releasedX, releasedY);
-//							if (consumed) {
-//								break;
-//							}
-//						}
-//					}
-//				}
-//			} else {
-//				if (Mouse.isGrabbed()) {
-//					if ((Mouse.getEventDX() != 0) || (Mouse.getEventDY() != 0)) {
-//						consumed = false;
-//						for (int i=0;i<mouseListeners.size();i++) {
-//							MouseListener listener = mouseListeners.get(i);
-//							if (listener.isAcceptingInput()) {
-//								if (anyMouseDown()) {
-//									listener.mouseDragged(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
-//								} else {
-//									listener.mouseMoved(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
-//								}
-//
-//								if (consumed) {
-//									break;
-//								}
-//							}
-//						}
-//					}
-//				}
-//
-//				int dwheel = Mouse.getEventDWheel();
-//				wheel += dwheel;
-//				if (dwheel != 0) {
-//					consumed = false;
-//					for (int i=0;i<mouseListeners.size();i++) {
-//						MouseListener listener = (MouseListener) mouseListeners.get(i);
-//						if (listener.isAcceptingInput()) {
-//							listener.mouseWheelMoved(dwheel);
-//							if (consumed) {
-//								break;
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-
-//		if ((lastMouseX != getMouseX()) || (lastMouseY != getMouseY())) {
-//			consumed = false;
-//			for (int i=0;i<mouseListeners.size();i++) {
-//				MouseListener listener = mouseListeners.get(i);
-//				if (listener.isAcceptingInput()) {
-//					if (anyMouseDown()) {
-//						listener.mouseDragged(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
-//					} else {
-//						listener.mouseMoved(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
-//					}
-//					if (consumed) {
-//						break;
-//					}
-//				}
-//			}
-//			lastMouseX = getMouseX();
-//			lastMouseY = getMouseY();
-//		}
-		
 		if (controllersInitialized) {
 			for (int i=0;i<getControllerCount();i++) {
 				int count = (controllers.get(i)).getButtonCount()+3;

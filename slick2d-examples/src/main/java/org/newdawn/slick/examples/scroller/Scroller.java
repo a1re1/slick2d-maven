@@ -20,9 +20,9 @@ public class Scroller extends BasicGame {
 	/** The size of the tiles - used to determine the amount to draw */
 	private static final int TILE_SIZE = 32;
 	/** The speed the tank moves at */
-	private static final float TANK_MOVE_SPEED = 0.001f;
+	private static final float TANK_MOVE_SPEED = 10f;
 	/** The speed the tank rotates at */
-	private static final float TANK_ROTATE_SPEED = 0.04f;
+	private static final float TANK_ROTATE_SPEED = 100f;
 
 	/** The player's x position in tiles */
 	private float playerX = 15;
@@ -111,29 +111,29 @@ public class Scroller extends BasicGame {
 		LOG.info("Window Dimensions in Tiles: "+widthInTiles+"x"+heightInTiles);
 	}
 
-	private static int lastDelta = 0;
+	private static long lastDelta = 0;
 
 	private void bindInput() {
 		// check the controls, left/right adjust the rotation of the tank, up/down
 		// move backwards and forwards
-		Input.bindKeyPress(USKeyboard.KEY_LEFT, true, () -> {
-			ang -= lastDelta * TANK_ROTATE_SPEED;
+		Input.bindKeyPress(USKeyboard.KEY_LEFT, true, -1, (delta) -> {
+			ang -= delta * TANK_ROTATE_SPEED;
 			updateMovementVector();
 		});
-		Input.bindKeyPress(USKeyboard.KEY_RIGHT, true, () -> {
-			ang += lastDelta * TANK_ROTATE_SPEED;
+		Input.bindKeyPress(USKeyboard.KEY_RIGHT, true, 30, (delta) -> {
+			ang += delta * TANK_ROTATE_SPEED;
 			updateMovementVector();
 		});
-		Input.bindKeyPress(USKeyboard.KEY_UP, true, () -> {
-			if (tryMove(dirX * lastDelta * TANK_MOVE_SPEED, dirY * lastDelta * TANK_MOVE_SPEED)) {
+		Input.bindKeyPress(USKeyboard.KEY_UP, true, -1, (delta) -> {
+			if (tryMove(dirX * delta * TANK_MOVE_SPEED, dirY * delta * TANK_MOVE_SPEED)) {
 				// if we managed to move update the animation
-				player.update(lastDelta);
+				player.update(Time.getDeltaMillis() * 10);
 			}
 		});
-		Input.bindKeyPress(USKeyboard.KEY_DOWN, true, () -> {
-			if (tryMove(-dirX * lastDelta * TANK_MOVE_SPEED, -dirY * lastDelta * TANK_MOVE_SPEED)) {
+		Input.bindKeyPress(USKeyboard.KEY_DOWN, true, -1, (delta) -> {
+			if (tryMove(-dirX * delta * TANK_MOVE_SPEED, -dirY * delta * TANK_MOVE_SPEED)) {
 				// if we managed to move update the animation
-				player.update(lastDelta);
+				player.update(Time.getDeltaMillis() * 10);
 			}
 		});
 	}
@@ -254,7 +254,7 @@ public class Scroller extends BasicGame {
 	 * @param argv The argument passed on the command line (if any)
 	 */
 	public static void main(String[] argv) {
-		AppGameContainer container = new AppGameContainer(new Scroller(), 800, 600, DisplayMode.Opt.WINDOWED, 1);
+		AppGameContainer container = new AppGameContainer(new Scroller(), 800, 600, DisplayMode.Opt.WINDOWED);
 		container.start();
 	}
 }

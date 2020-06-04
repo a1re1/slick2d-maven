@@ -1,6 +1,8 @@
 package org.newdawn.slick;
 
+import java.util.LinkedList;
 import java.util.Properties;
+import java.util.Queue;
 
 import org.lwjgl.glfw.GLFW;
 import org.newdawn.slick.gui.GUIContext;
@@ -32,8 +34,6 @@ public abstract class GameContainer implements GUIContext {
 	/** The shared drawable if any */
 	protected static FBOGraphics SHARED_DRAWABLE;
 	
-	/** The time the last frame was rendered */
-	protected long lastFrame;
 	/** The last time the FPS recorded */
 	protected long lastFPS;
 	/** The last recorded FPS */
@@ -90,13 +90,12 @@ public abstract class GameContainer implements GUIContext {
 	protected boolean alwaysRender;
 	/** True if we require stencil bits */
 	protected static boolean stencil;
-	
+
 	/**
 	 * Create a new game container wrapping a given game
 	 */
 	protected GameContainer(Game game) {
 		this.game = game;
-		lastFrame = getTime();
 
 		getBuildVersion();
 	}
@@ -292,16 +291,8 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	public abstract void setIcons(String[] refs) throws SlickException;
 
-	// TODO still dont know if i can really use system time here
-	public long getTime() {
-		return System.nanoTime() / 1000000;
-	}
-
-	public void sleep(int milliseconds) {
-		long target = getTime()+milliseconds;
-		while (getTime() < target) {
-			try { Thread.sleep(1); } catch (Exception e) {}
-		}
+	public static long getTime() {
+		return Time.getTimeMillis();
 	}
 	
 	public abstract void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException;
@@ -341,23 +332,10 @@ public abstract class GameContainer implements GUIContext {
 	public static boolean hasFocus() {
 		return GLFW.glfwGetWindowAttrib(GAME_WINDOW, GLFW_FOCUSED) == GLFW_TRUE;
 	}
-	
-	/**
-	 * Retrieve the time taken to render the last frame, i.e. the change in time - delta.
-	 * 
-	 * @return The time taken to render the last frame
-	 */
-	protected int getDelta() {
-		long time = getTime();
-		int delta = (int) (time - lastFrame);
-		lastFrame = time;
 
-		return delta;
-	}
-	
 	protected void updateFPS() {
-		if (getTime() - lastFPS > 1000) {
-			lastFPS = getTime();
+		if (Time.getTimeMillis() - lastFPS > 1000) {
+			lastFPS = Time.getTimeMillis();
 			recordedFPS = fps;
 			fps = 0;
 		}

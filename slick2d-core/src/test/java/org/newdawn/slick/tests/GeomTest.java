@@ -71,7 +71,7 @@ public class GeomTest extends BasicGame {
         g.fillRect(0,0,5,5);
         g.setColor(Color.white);
         g.drawRect(0,0,5,5);
-        g.popTransform();
+//        g.popTransform();
         g.setColor(Color.green);
         g.fillRect(20,20,50,50);
         g.popTransform();
