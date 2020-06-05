@@ -250,6 +250,11 @@ public class Input {
 		keyPressBindings.put(boundKey, KeyPress.of(enableRepeatPress, ratePerSecond, event));
 	}
 
+	public static void bindKeyPress(int boundKey, boolean enableRepeatPress, KeyPress.KeyPressDelta getDelta, KeyPress.Action event) {
+		LOG.info("Bound key: {} - repeatEnabled: {}", boundKey, enableRepeatPress);
+		keyPressBindings.put(boundKey, KeyPress.of(enableRepeatPress, getDelta, event));
+	}
+
 	private void bindKeyInput() {
 		GLFW.glfwSetKeyCallback(GAME_WINDOW, (window, key, scancode, action, mods) -> {
 			if (keyPressBindings.containsKey(key)) {
